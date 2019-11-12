@@ -1,0 +1,1 @@
+"C:\Program Files\7-Zip\7z.exe" a -r D:\code\git\bernoulli_calc\yaf_calc.zip D:\code\git\bernoulli_calc\yaf_calc.js

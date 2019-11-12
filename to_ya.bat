@@ -1,0 +1,1 @@
+yc serverless function version create --function-name=test-bot --runtime nodejs12 --entrypoint yaf_calc.input --memory 128m --execution-timeout 5s --source-path D:/code/git/bernoulli_calc/yaf_calc.zip
