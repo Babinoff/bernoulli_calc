@@ -23,12 +23,18 @@ exports.input = function (data){
 	let dice_fnp = {"No":0,"2+":1,"3+":2,"4+":3,"5+":4,"6+":5};
 
 	let test_poll = new dice_poll();
-	let test_text = " chat_id:"+ch_id;
-	test_text += "    test_text    ";
+	// let test_text = " chat_id:"+ch_id;
+	test_text = "input: \n";
+	test_text += list_of_str.join("\n")
 	if (list_of_str != "") {
+		test_text += "\n"
+		test_text += "output:"
 		// test_poll.dh = list_of_str[0];
 		// test_poll.dw = list_of_str[1];
+		test_text += "\n"
 		test_text += dice_to_hit[list_of_str[0]];
+		test_text += "\n"
+		test_text += dice_to_wund[list_of_str[1]];
 	};
 	
 
