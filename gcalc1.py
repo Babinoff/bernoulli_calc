@@ -2,7 +2,7 @@
 dice_to_hit = {"1+":1,"2+":100/6*5/100,"3+":100/6*4/100,"4+":100/6*3/100,"5+":100/6*2/100,"6+":100/6*1/100}
 dice_to_wund = {"1+":6,"2+":5,"3+":4,"4+":3,"5+":2,"6+":1}
 dice_armor_save = {"No":0,"2+":1,"3+":2,"4+":3,"5+":4,"6+":5}
-dice_fnp = {"No":0,"2+":1,"3+":2,"4+":3,"5+":4,"6+":5}
+dice_fnp = {"No":0, "2+":1, "3+":2 ,"4+":3, "5+":4, "6+":5}
 
 class WhCalc:
 	dh = None
@@ -30,18 +30,18 @@ class WhCalc:
 		#print(st)
 	
 	def go(self):
-		dh = dice_to_hit[WhCalc.dh]
-		dw = dice_to_wund[WhCalc.dw]
-		da = dice_armor_save[WhCalc.da]
-		df = dice_fnp[WhCalc.df]
-		ac = WhCalc.ac
-		brn_p = WhCalc.dice_drop(dh,dw,da,df)
+		hit = dice_to_hit[WhCalc.dh]
+		wnd = dice_to_wund[WhCalc.dw]
+		arm = dice_armor_save[WhCalc.da]
+		fnp = dice_fnp[WhCalc.df]
+		atk = WhCalc.ac
+		brn_p = WhCalc.dice_drop(hit, wnd, arm, fnp)
 		#print(brn_p)
 
 		ok_nums_list =[]
 		brnpsum = []
-		n = ac
-		for k in range(ac+1):
+		n = atk
+		for k in range(atk+1):
 			#try:
 			brn_f = 100*WhCalc.brn(brn_p,k,n)
 			brnpsum.append(brn_f)
