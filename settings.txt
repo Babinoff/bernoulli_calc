@@ -1,0 +1,3 @@
+setWebhook?url=
+getWebhookInfo
+getUpdates
