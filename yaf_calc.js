@@ -1,3 +1,6 @@
+var test_text = " \n test text: \n"  // TEST TEXT
+
+
 //#region core func
 function fc(n) {
 	if (n === 0 || n === 1) {
@@ -33,12 +36,13 @@ function to_int(string) {
 function rand_dice(max, count = "1"){
 	let dice_results = []
 	let count_int = to_int(count)
-	for (i = 0; i < count_int; i++){//for (const k of Array(count).keys()){
-		dice_results.push(Math.floor(Math.random() * max) + 1)
+	for (const k of Array(count_int).keys()){
+		let random_value = Math.floor(Math.random() * max) + 1
+		test_text += random_value
+		dice_results.push(random_value)
 	}
 	return dice_results;
 }
-	
 //#endregion  core func
 
 
@@ -49,46 +53,41 @@ exports.input = function (data) {
 	let sprt = "||"
 	let body = JSON.parse(data.body);
 	let b_text = body.message.text;
-	let ch_id = body.message.chat.id;
-	let dice_to_hit = { "1+": 1, "2+": 100 / 6 * 5 / 100, "3+": 100 / 6 * 4 / 100, "4+": 100 / 6 * 3 / 100, "5+": 100 / 6 * 2 / 100, "6+": 100 / 6 * 1 / 100 };
-	let dice_to_wund = { "1+": 6, "2+": 5, "3+": 4, "4+": 3, "5+": 2, "6+": 1 };
-	let dice_armor_save = { "No": null, "2+": 1, "3+": 2, "4+": 3, "5+": 4, "6+": 5 };
-	let dice_fnp = { "No": null, "2+": 1, "3+": 2, "4+": 3, "5+": 4, "6+": 5 };
-	// i = input
-	var i_atk = 3
-	var i_hit = "4+"
-	var i_wnd = "4+"
-	var i_arm = "No"
-	var i_fnp = "No"
+	let chat_id = body.message.chat.id;
 	//#endregion params
+	test_text += "chat_id: \n " + chat_id // TEST TEXT
+	var text_answer = "output: \n"
 	try {
 		let list_of_str = "";
+		let dice_to_hit = { "1+": 1, "2+": 100 / 6 * 5 / 100, "3+": 100 / 6 * 4 / 100, "4+": 100 / 6 * 3 / 100, "5+": 100 / 6 * 2 / 100, "6+": 100 / 6 * 1 / 100 };
+		let dice_to_wund = { "1+": 6, "2+": 5, "3+": 4, "4+": 3, "5+": 2, "6+": 1 };
+		let dice_armor_save = { "No": null, "2+": 1, "3+": 2, "4+": 3, "5+": 4, "6+": 5 };
+		let dice_fnp = { "No": null, "2+": 1, "3+": 2, "4+": 3, "5+": 4, "6+": 5 };
+		var i_atk = 3
+		var i_hit = "4+"
+		var i_wnd = "4+"
+		var i_arm = "No"
+		var i_fnp = "No"
 
 		if (b_text.includes(sprt) & b_text.indexOf('/roll') === -1) {
 			list_of_str = b_text.split(sprt);
 		}
-
-		var test_text = " \n test text: \n"  // TEST TEXT
-		var text_answer = "output: \n"
 
 		if (b_text.includes("/roll") & b_text.includes(" ")) {
 			list_of_str = b_text.split(" ")
 			if (list_of_str.length == 2){
 				let string_list = rand_dice(b_text.split(" ")[1])
 				text_answer += string_list.join("\n")
-			} else if (list_of_str.length == 3) {
+			} else if (list_of_str.length > 2) {
 				let string_list = rand_dice(b_text.split(" ")[1], b_text.split(" ")[2])
-				text_answer += string_list.join("\n")}
+				text_answer += string_list.join("\n")
+			}
+			test_text += "list_of_str.length: " + list_of_str.length + "\n"// TEST TEXT
 			
 		}
-		// let test_poll = new dice_poll();
 		if (list_of_str != "" & b_text.indexOf('/roll') === -1) {
 			test_text += "input: \n"
 			test_text += "\n list_of_str content = " + list_of_str.join("\n") // TEST TEXT
-			// var atk = parseInt(list_of_str[0],10)
-			// text_answer += "\n"
-			// text_answer += "output:"
-			// text_answer += "\n"
 			i_atk = to_int(list_of_str[0])
 			test_text += "\n list_of_str.length = " + list_of_str.length  // TEST TEXT
 			if (list_of_str.length > 1) {

@@ -1,1 +1,1 @@
-yc serverless function version create --function-name=test-bot --runtime nodejs12 --entrypoint yaf_calc.input --memory 128m --execution-timeout 5s --source-path %~dp0/yaf_calc.zip
+yc serverless function version create --function-name=wh-calc-bot --runtime nodejs12 --entrypoint yaf_calc.input --memory 128m --execution-timeout 5s --source-path %~dp0/yaf_calc.zip
