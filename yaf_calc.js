@@ -1,6 +1,4 @@
 var test_text = " \n test text: \n"  // TEST TEXT
-
-
 //#region core func
 function fc(n) {
 	if (n === 0 || n === 1) {
@@ -106,7 +104,9 @@ exports.input = function (data) {
 	}
 	//#endregion
 }
+//#endregion main
 
+//#region comands functions
 function poll_funct(b_text, sprt, list_of_str, i_atk, i_hit, i_wnd, i_arm, i_fnp, dice_to_hit, dice_to_wund, dice_armor_save, dice_fnp, text_answer) {
 	list_of_str = b_text.split(sprt);
 	if (list_of_str != "" & b_text.indexOf('/roll') === -1) {
@@ -181,4 +181,4 @@ function roll_funct(b_text, list_of_str, text_answer, sprt) {
 	test_text += "list_of_str.length: " + list_of_str.length + "\n"; // TEST TEXT
 	return text_answer;// return { list_of_str, text_answer };
 }
-//#endregion main
+//#endregion comands functions
