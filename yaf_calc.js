@@ -1,49 +1,4 @@
 var test_text = " \n test text: \n"  // TEST TEXT
-//#region core func
-function fc(n) {
-	if (n === 0 || n === 1) {
-		return 1;
-	}
-	return n * fc(n - 1);
-}
-
-
-function brn(p, k, n) {
-	return (fc(n) / (fc(k) * fc(n - k))) * (p ** k * (1 - p) ** (n - k))
-}
-
-
-function dice_drop(dice_to_hit, dice_to_wund, dice_armor_save, dice_fnp) {
-	let value_p = ""
-	if (dice_armor_save == null & dice_fnp == null) {
-		value_p = dice_to_hit / 6 * dice_to_wund
-	}
-	else if (dice_armor_save != null & dice_fnp == null) { value_p = dice_to_hit / 6 * dice_to_wund / 6 * dice_armor_save }
-	else if (dice_armor_save == null & dice_fnp != null) { value_p = dice_to_hit / 6 * dice_to_wund / 6 * dice_fnp }
-	else if (dice_armor_save != null & dice_fnp != null) { value_p = dice_to_hit / 6 * dice_to_wund / 6 * dice_armor_save / 6 * dice_fnp }
-	else { value_p = "how do you get whis? post me a later" }
-	return value_p
-}
-
-
-function to_int(string) {
-	return parseInt(string, 10)
-}
-
-
-function rand_dice(max, count = "1"){
-	let dice_results = []
-	let count_int = to_int(count)
-	for (const k of Array(count_int).keys()){
-		let random_value = Math.floor(Math.random() * max) + 1
-		test_text += random_value
-		dice_results.push(random_value)
-	}
-	return dice_results;
-}
-//#endregion  core func
-
-
 //#region main
 exports.input = function (data) {
 	//#region params
@@ -60,7 +15,7 @@ exports.input = function (data) {
 		if (b_text == "/roll"){
 			text_answer = "Условия запуска: '/roll 6 5' - первая цифра это количество граней на кубике, вторая количество бросков кубика. \n"
 			text_answer += "Пример запуска при этих параметрах: \n"
-			text_answer = roll_funct('/roll 6 5', list_of_str, text_answer, sprt)
+			text_answer = roll_funct2('/roll 6 5', list_of_str, text_answer, sprt)
 		}
 		if (b_text.includes("/poll")){
 			text_answer = "Условия запуска: '/poll 5 3+ 4+ 5+ 6+' - первая цифра (в примере 5) это количество атак, вторая (3+) значение to hit, тертья (4+) to wound, четвертая (5+) armor save, пятая (6+) fnp \n"
@@ -69,7 +24,7 @@ exports.input = function (data) {
 		}
 
 		if (b_text.includes("/roll") & b_text.includes(sprt)) {
-			text_answer = roll_funct(b_text, list_of_str, text_answer, sprt)
+			text_answer = roll_funct2(b_text, list_of_str, text_answer, sprt)
 		}
 		if (b_text.includes("/poll") & b_text.includes(sprt)){
 			text_answer = poll_funct(b_text, sprt, list_of_str, i_atk, i_hit, i_wnd, i_arm, i_fnp, dice_to_hit, dice_to_wund, dice_armor_save, dice_fnp, text_answer)
@@ -89,6 +44,7 @@ exports.input = function (data) {
 	//#region json_answer
 	let json_answer = {
 		"method": "sendMessage",
+		"parse_mode": "Markdown",
 		"chat_id": body.message.chat.id,
 		"reply_to_message_id": body.message.message_id,
 		"text": text_answer
@@ -182,17 +138,104 @@ function poll_funct(b_text, sprt, list_of_str, i_atk, i_hit, i_wnd, i_arm, i_fnp
 	return text_answer;
 }
 
-function roll_funct(b_text, list_of_str, text_answer, sprt) {
+// function roll_funct(b_text, list_of_str, text_answer, sprt) {
+// 	list_of_str = b_text.split(sprt);
+// 	if (list_of_str.length == 2) {
+// 		let string_list = rand_dice(b_text.split(sprt)[1]);
+// 		text_answer += string_list.join("\n");
+// 	}
+// 	else if (list_of_str.length > 2) {
+// 		let string_list = rand_dice(b_text.split(sprt)[1], b_text.split(sprt)[2]);
+// 		text_answer += string_list.join("\n");
+// 	}
+// 	test_text += "list_of_str.length: " + list_of_str.length + "\n"; // TEST TEXT
+// 	return text_answer;// return { list_of_str, text_answer };
+// }
+
+function roll_funct2(b_text, list_of_str, text_answer, sprt) {
 	list_of_str = b_text.split(sprt);
-	if (list_of_str.length == 2) {
-		let string_list = rand_dice(b_text.split(sprt)[1]);
-		text_answer += string_list.join("\n");
+	if (list_of_str.length == 2 & b_text.split(sprt)[1] < 100) {
+		let dic_string_list = rand_dice2(b_text.split(sprt)[1]);
+		text_answer += dict_to_string(dic_string_list);
 	}
-	else if (list_of_str.length > 2) {
-		let string_list = rand_dice(b_text.split(sprt)[1], b_text.split(sprt)[2]);
-		text_answer += string_list.join("\n");
+	else if (list_of_str.length > 2 & b_text.split(sprt)[1] <= 100 & b_text.split(sprt)[2] <= 100) {
+		let dic_string_list = rand_dice2(b_text.split(sprt)[1], b_text.split(sprt)[2]);
+		text_answer += dict_to_string(dic_string_list);
+	}
+	else{
+		text_answer += "Слишком большие значения, максимальное количество граней кубика 100, максимальное количество бросков 100."
 	}
 	test_text += "list_of_str.length: " + list_of_str.length + "\n"; // TEST TEXT
 	return text_answer;// return { list_of_str, text_answer };
 }
 //#endregion comands functions
+//#region core func
+function fc(n) {
+	if (n === 0 || n === 1) {
+		return 1;
+	}
+	return n * fc(n - 1);
+}
+
+
+function brn(p, k, n) {
+	return (fc(n) / (fc(k) * fc(n - k))) * (p ** k * (1 - p) ** (n - k))
+}
+
+
+function dice_drop(dice_to_hit, dice_to_wund, dice_armor_save, dice_fnp) {
+	let value_p = ""
+	if (dice_armor_save == null & dice_fnp == null) {
+		value_p = dice_to_hit / 6 * dice_to_wund
+	}
+	else if (dice_armor_save != null & dice_fnp == null) { value_p = dice_to_hit / 6 * dice_to_wund / 6 * dice_armor_save }
+	else if (dice_armor_save == null & dice_fnp != null) { value_p = dice_to_hit / 6 * dice_to_wund / 6 * dice_fnp }
+	else if (dice_armor_save != null & dice_fnp != null) { value_p = dice_to_hit / 6 * dice_to_wund / 6 * dice_armor_save / 6 * dice_fnp }
+	else { value_p = "how do you get whis? post me a later" }
+	return value_p
+}
+
+
+function to_int(string) {
+	return parseInt(string, 10)
+}
+
+
+// function rand_dice(max, count = "1"){
+// 	let dice_results = []
+// 	let count_int = to_int(count)
+// 	for (const k of Array(count_int).keys()){
+// 		let random_value = Math.floor(Math.random() * max) + 1
+// 		test_text += random_value
+// 		dice_results.push(random_value)
+// 	}
+// 	return dice_results;
+// }
+
+
+function rand_dice2(max, count = "1"){
+	let dice_list_result = []
+	let dice_dic_results = {}
+	let count_int = to_int(count)
+	for (const k of Array(count_int).keys()){
+		dice_list_result.push(Math.floor(Math.random() * max) + 1)
+	}
+	for (const dice of dice_list_result){
+		dice_dic_results[dice] = []
+	}
+	for (const dice of dice_list_result){
+		dice_dic_results[dice].push(dice)
+	}
+	return dice_dic_results;
+}
+
+
+function dict_to_string(dic_string_list){
+	let string_list = []
+	for (keys_and_items of Object.entries(dic_string_list)){
+		string_list.push("```" + "_[" + keys_and_items.join("]=[") + "]_" + "```" + "*" + "общее количество: " + keys_and_items[1].length + "*")
+	}
+	let one_string = string_list.join("\n")
+	return one_string;
+}
+//#endregion  core func
