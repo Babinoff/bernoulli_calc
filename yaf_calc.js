@@ -102,12 +102,12 @@ function param_funct() {
 }
 function poll_funct(b_text, sprt, list_of_str, i_atk, i_hit, i_wnd, i_arm, i_fnp, dice_to_hit, dice_to_wund, dice_armor_save, dice_fnp, text_answer) {
 	list_of_str = b_text.split(sprt);
+	list_of_str.splice(0, 1) // Удаляем нудевой индекс с /roll
 	i_atk = to_int(list_of_str[0]);
 	if (i_atk <= 100){
 		if (list_of_str != "" & b_text.indexOf('/roll') === -1) {
 			test_text += "input: \n";
 			test_text += "\n list_of_str content = " + list_of_str.join("\n"); // TEST TEXT
-			list_of_str.splice(0, 1) // Удаляем нудевой индекс с /roll
 			// i_atk = to_int(list_of_str[0]);
 			test_text += "\n list_of_str.length = " + list_of_str.length; // TEST TEXT
 			if (list_of_str.length > 1) {
@@ -163,6 +163,7 @@ function poll_funct(b_text, sprt, list_of_str, i_atk, i_hit, i_wnd, i_arm, i_fnp
 	}
 	else {
 		text_answer += "\n Слишком большое значение атак, максимальное количество атак 100 \n" + b_text;
+	}
 	return text_answer;
 }
 
