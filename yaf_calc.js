@@ -6,41 +6,45 @@ exports.input = function (data) {
 		// let test = false;  // TEST TEXT
 		let sprt = " "
 		let body = JSON.parse(data.body);
-		let b_text = body.message.text;
-		let chat_id = body.message.chat.id;
-		// //#endregion params
-		test_text += "chat_id: \n " + chat_id // TEST TEXT
-		let text_answer = "output: \n"
-		let { list_of_str, i_atk, i_hit, i_wnd, i_arm, i_fnp, dice_to_hit, dice_to_wund, dice_armor_save, dice_fnp } = param_funct();
-		if (b_text == "/roll"){
-			text_answer = "Условия запуска: '/roll 6 5' - первая цифра это количество граней на кубике, вторая количество бросков кубика. \n"
-			text_answer += "Пример запуска при этих параметрах: \n"
-			text_answer = roll_funct2('/roll 6 5', list_of_str, text_answer, sprt)
-		}
-		if (b_text == "/poll"){
-			text_answer = "Условия запуска: '/poll 5 3+ 4+ 5+ 6+' - первая цифра (в примере 5) это количество атак, вторая (3+) значение to hit, тертья (4+) to wound, четвертая (5+) armor save, пятая (6+) fnp \n"
-			text_answer += "Пример запуска при этих параметрах: \n"
-			text_answer = poll_funct('/poll 5 3+ 4+ 5+ 6+', sprt, list_of_str, i_atk, i_hit, i_wnd, i_arm, i_fnp, dice_to_hit, dice_to_wund, dice_armor_save, dice_fnp, text_answer)
-		}
+		let json_answer = {'ok':'true'}
+		if (body.hasOwnProperty('message') && body.message.hasOwnProperty('text'))
+		{
+			let b_text = body.message.text;
+			let chat_id = body.message.chat.id;
+			// //#endregion params
+			test_text += "chat_id: \n " + chat_id // TEST TEXT
+			let text_answer = "output: \n"
+			let { list_of_str, i_atk, i_hit, i_wnd, i_arm, i_fnp, dice_to_hit, dice_to_wund, dice_armor_save, dice_fnp } = param_funct();
+			if (b_text == "/roll"){
+				text_answer = "Условия запуска: '/roll 6 5' - первая цифра это количество граней на кубике, вторая количество бросков кубика. \n"
+				text_answer += "Пример запуска при этих параметрах: \n"
+				text_answer = roll_funct2('/roll 6 5', list_of_str, text_answer, sprt)
+			}
+			if (b_text == "/poll"){
+				text_answer = "Условия запуска: '/poll 5 3+ 4+ 5+ 6+' - первая цифра (в примере 5) это количество атак, вторая (3+) значение to hit, тертья (4+) to wound, четвертая (5+) armor save, пятая (6+) fnp \n"
+				text_answer += "Пример запуска при этих параметрах: \n"
+				text_answer = poll_funct('/poll 5 3+ 4+ 5+ 6+', sprt, list_of_str, i_atk, i_hit, i_wnd, i_arm, i_fnp, dice_to_hit, dice_to_wund, dice_armor_save, dice_fnp, text_answer)
+			}
 
-		if (b_text.includes("/roll") & b_text.includes(sprt)) {
-			text_answer = roll_funct2(b_text, list_of_str, text_answer, sprt)
-		}
-		if (b_text.includes("/poll") & b_text.includes(sprt)){
-			text_answer = poll_funct(b_text, sprt, list_of_str, i_atk, i_hit, i_wnd, i_arm, i_fnp, dice_to_hit, dice_to_wund, dice_armor_save, dice_fnp, text_answer)
-		}
+			if (b_text.includes("/roll") & b_text.includes(sprt)) {
+				text_answer = roll_funct2(b_text, list_of_str, text_answer, sprt)
+			}
+			if (b_text.includes("/poll") & b_text.includes(sprt)){
+				text_answer = poll_funct(b_text, sprt, list_of_str, i_atk, i_hit, i_wnd, i_arm, i_fnp, dice_to_hit, dice_to_wund, dice_armor_save, dice_fnp, text_answer)
+			}
 
-		if (b_text.includes("test")) {
-			text_answer += "\n" + test_text  // TEST TEXT
+			if (b_text.includes("test")) {
+				text_answer += "\n" + test_text  // TEST TEXT
+			}
+			json_answer = {
+				"method": "sendMessage",
+				"parse_mode": "Markdown",
+				"chat_id": body.message.chat.id,
+				"reply_to_message_id": body.message.message_id,
+				"text": text_answer
+			};
 		}
 		//#region json_answer
-		let json_answer = {
-			"method": "sendMessage",
-			"parse_mode": "Markdown",
-			"chat_id": body.message.chat.id,
-			"reply_to_message_id": body.message.message_id,
-			"text": text_answer
-		};
 		return {
 			"statusCode": 200,
 			"headers": {
